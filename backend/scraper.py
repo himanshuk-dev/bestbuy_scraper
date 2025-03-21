@@ -40,18 +40,16 @@ class BestBuyScraper:
     def get_products(self, category_name, category_url):
         products = []
         next_page_url = category_url
+        page_count = 0
         
-        while next_page_url:
-            # TODO: DEBUG ONLY, remove at cleanup
-            # print('-----------------------------------')
-            # print('next page url', next_page_url)
-            # print('-----------------------------------')
+        while next_page_url and page_count < 3:  # NOTE: Update page limit here. Limited to 3 pages per category for assessment.
+            page_count += 1
             self.driver.get(next_page_url)
             time.sleep(2)
             
             try:
                 product_elements = self.driver.find_elements(By.CSS_SELECTOR, "li[class*='productListItem']")
-                print(f"Found {len(product_elements)} products in category {category_name}")
+                print(f"Found {len(product_elements)} products in category {category_name}, page {page_count}")
                 
                 for product in product_elements:
                     try:
@@ -59,7 +57,7 @@ class BestBuyScraper:
                         price = product.find_element(By.CSS_SELECTOR, "div[class*='price']").text.strip()
                         rating_element = product.find_elements(By.CSS_SELECTOR, "meta[itemprop='ratingValue']")
                         rating = rating_element[0].get_attribute("content") if rating_element else "No rating"
-                        
+
                         products.append({
                             "name": name,
                             "price": price,
@@ -85,10 +83,7 @@ class BestBuyScraper:
             except Exception as e:
                 print(f"Error extracting products: {e}")
                 break
-            
-            # TODO: DEBUG ONLY, remove at cleanup
-        print('products found', products)
-        
+
         return products
 
     def scrape(self):
