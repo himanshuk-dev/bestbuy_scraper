@@ -18,7 +18,7 @@ class BestBuyScraper:
         # Use WebDriver-Manager to install & manage ChromeDriver
         self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         self.wait = WebDriverWait(self.driver, 10)
-        self.base_url = "https://www.bestbuy.ca/en-ca/"
+        self.base_url = "https://www.bestbuy.ca"
 
     def get_categories(self):
         categories = {}
@@ -38,11 +38,17 @@ class BestBuyScraper:
         return categories
 
     def get_products(self, category_name, category_url):
-        self.driver.get(category_url)
-        time.sleep(2)
-        
         products = []
-        while True:
+        next_page_url = category_url
+        
+        while next_page_url:
+            # TODO: DEBUG ONLY, remove at cleanup
+            # print('-----------------------------------')
+            # print('next page url', next_page_url)
+            # print('-----------------------------------')
+            self.driver.get(next_page_url)
+            time.sleep(2)
+            
             try:
                 product_elements = self.driver.find_elements(By.CSS_SELECTOR, "li[class*='productListItem']")
                 print(f"Found {len(product_elements)} products in category {category_name}")
@@ -63,18 +69,26 @@ class BestBuyScraper:
                     except Exception as e:
                         print(f"Skipping product due to error: {e}")
                 
-                # Check if the "Show More" button is present
+                # Handle Pagination: Check for the "Show More" button link and extract next page URL from <a> tag
                 try:
-                    show_more = self.driver.find_element(By.XPATH, "//button[contains(text(), 'Show more')]")
-                    self.driver.execute_script("arguments[0].click();", show_more)
-                    time.sleep(3)
+                    next_page_element = self.driver.find_element(By.CSS_SELECTOR, "a.buttonLoadMoreLink_THBoN")
+                    relative_url = next_page_element.get_attribute("href")
+                    if relative_url:
+                        if relative_url.startswith("/"):
+                            next_page_url = self.base_url + relative_url
+                        else:
+                            next_page_url = relative_url
+                    else:
+                        next_page_url = None
                 except:
-                    break  # No more products to load
+                    next_page_url = None  # No more pages to load
             except Exception as e:
                 print(f"Error extracting products: {e}")
-                break  # Exit if no more pagination
-
-            # print('products found',products)
+                break
+            
+            # TODO: DEBUG ONLY, remove at cleanup
+        print('products found', products)
+        
         return products
 
     def scrape(self):
