@@ -10,7 +10,41 @@ DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_HOST = os.getenv("DB_HOST")
-DB_PORT = os.getenv("DB_PORT", "5432")
+DB_PORT = os.getenv("DB_PORT")
+
+def create_database_if_not_exists():
+    """Creates the database if it doesn't exist. Returns True if created."""
+    try:
+        conn = psycopg2.connect(
+            dbname="postgres",  # default DB
+            user=DB_USER,
+            password=DB_PASSWORD,
+            host=DB_HOST,
+            port=DB_PORT
+        )
+        conn.autocommit = True
+        cur = conn.cursor()
+
+        cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (DB_NAME,))
+        exists = cur.fetchone()
+
+        if not exists:
+            cur.execute(f"CREATE DATABASE {DB_NAME}")
+            print(f"✅ Database '{DB_NAME}' created successfully.")
+            cur.close()
+            conn.close()
+            return True  # DB was created
+        else:
+            print(f"ℹ️ Database '{DB_NAME}' already exists.")
+            cur.close()
+            conn.close()
+            return False  # DB already existed
+
+    except Exception as e:
+        print(f"❌ Error checking or creating database: {e}")
+        return False
+
+
 
 class DatabaseManager:
     def __init__(self):
@@ -36,7 +70,7 @@ class DatabaseManager:
         if self.conn:
             try:
                 with self.conn.cursor() as cur:
-                    with open("backend/data.sql", "r") as f:
+                    with open("data.sql", "r") as f:
                         cur.execute(f.read())
                 self.conn.commit()
                 print("Database initialized successfully.")
@@ -84,6 +118,7 @@ class DatabaseManager:
             self.conn.close()
 
 if __name__ == "__main__":
+    create_database_if_not_exists()
     db_manager = DatabaseManager()
     db_manager.initialize_db()
     db_manager.close_connection()
