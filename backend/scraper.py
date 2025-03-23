@@ -12,7 +12,7 @@ class BestBuyScraper:
     def __init__(self):
         # Configure Selenium WebDriver
         options = Options()
-        options.add_argument("--headless")  # Run in headless mode (no browser UI)
+        options.add_argument("--headless")
         options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1920x1080")
 
@@ -44,22 +44,25 @@ class BestBuyScraper:
             print("Error finding categories:", e)
         return categories
 
-    # TODO: Save products to database by matching the category id with category name in product
     def get_products(self, category_name, category_url):
         products = []
         next_page_url = category_url
         page_count = 0
 
-        category_id = self.db.insert_category(category_name, category_url)
+        # Get the category_id from the DB
+        category_id = self.db.get_category_id_by_name(category_name)
+        if not category_id:
+            print(f"❌ Could not find category ID for '{category_name}', skipping products.")
+            return products
 
-        while next_page_url and page_count < 3:  # NOTE: Update page limit here. Limited to 3 pages per category for assessment.
+        while next_page_url and page_count < 2:  # NOTE: Update page limit here. Limited to 3 pages per category for assessment.
             page_count += 1
             self.driver.get(next_page_url)
-            time.sleep(2)
-
+            time.sleep(4)
+            
             try:
                 product_elements = self.driver.find_elements(By.CSS_SELECTOR, "li[class*='productListItem']")
-                print(f"Found {len(product_elements)} products in category {category_name}, page {page_count}")
+                print(f"Found {len(product_elements)} products in category '{category_name}', page {page_count}")
 
                 for product in product_elements:
                     try:
@@ -76,9 +79,7 @@ class BestBuyScraper:
                         }
                         products.append(product_data)
 
-                        # Insert product into DB
-                        if category_id:
-                            self.db.insert_product(name, price, rating, category_id)
+                        self.db.insert_product(name, price, rating, category_id)
                     except Exception as e:
                         print(f"Skipping product due to error: {e}")
 
@@ -87,10 +88,7 @@ class BestBuyScraper:
                     next_page_element = self.driver.find_element(By.CSS_SELECTOR, "a.buttonLoadMoreLink_THBoN")
                     relative_url = next_page_element.get_attribute("href")
                     if relative_url:
-                        if relative_url.startswith("/"):
-                            next_page_url = self.base_url + relative_url
-                        else:
-                            next_page_url = relative_url
+                        next_page_url = self.base_url + relative_url if relative_url.startswith("/") else relative_url
                     else:
                         next_page_url = None
                 except:
@@ -107,9 +105,9 @@ class BestBuyScraper:
 
         all_products = []
         for cat_name, cat_url in categories.items():
-            print(f"Scraping category: {cat_name} with {cat_url}")
+            print(f"Scraping category: {cat_name} with url: {cat_url}")
             category_products = self.get_products(cat_name, cat_url)
-            print(f"Extracted {len(category_products)} products for category {cat_name}")
+            print(f"✅ Extracted {len(category_products)} products for category {cat_name}")
             all_products.extend(category_products)
 
         self.driver.quit()
