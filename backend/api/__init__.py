@@ -16,7 +16,10 @@ def create_app():
     app = Flask(__name__)
 
     # Set config from environment variables
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+    if test_config:
+        app.config.update(test_config)
+    else:
+        app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     # Initialize database
