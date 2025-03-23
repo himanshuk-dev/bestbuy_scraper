@@ -1,8 +1,6 @@
 # SQLAlchemy data models (Product, Category)
 
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from . import db
 
 class Category(db.Model):
     __tablename__ = 'categories'
