@@ -29,7 +29,7 @@ const Filter = ({ onChange }) => {
   return (
     <Box display="flex" justifyContent="center" mt={3}>
       <FormControl sx={{ minWidth: 300, backgroundColor: 'white' }}>
-        <InputLabel id="category-select-label" sx={{ fontWeight: 'bold' ,fontSize:'1.2rem'}}>Filter by Category</InputLabel>
+        <InputLabel id="category-select-label" sx={{ fontWeight: 'bold' ,fontSize:'1.4rem', color: '#545863'}} color='blue'>Filter by Category</InputLabel>
         <Select
           labelId="category-select-label"
           id="category-select"
