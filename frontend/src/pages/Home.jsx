@@ -31,6 +31,7 @@ const Home = () => {
 
   return (
     <div>
+      <h1 style={{ textAlign:'center', color:'white', fontSize:'8vh' }}>BestBuy Database</h1>
       {/* <Filter onChange={handleCategoryChange} /> */}
       <ProductList products={products} />
     </div>
