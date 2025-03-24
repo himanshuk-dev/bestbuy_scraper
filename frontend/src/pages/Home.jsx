@@ -33,7 +33,15 @@ const Home = () => {
     <div>
       <h1 style={{ textAlign:'center', color:'white', fontSize:'8vh' }}>BestBuy Database</h1>
       {/* <Filter onChange={handleCategoryChange} /> */}
-      <ProductList products={products} />
+      <ProductList
+  products={products}
+  // loading={loading}
+  // error={error}
+  page={page}
+  totalPages={products?.pages || 1}
+  onPageChange={(newPage) => setPage(newPage)}
+/>
+
     </div>
   );
 };

@@ -1,17 +1,14 @@
-// Displays products in a table.
-
 // ProductList.jsx
 import React from 'react';
 
-const ProductList = ({ products, onDelete, loading, error }) => {
+const ProductList = ({ products, loading, error, onPageChange, page, totalPages }) => {
   if (loading) return <p>Loading products...</p>;
   if (error) return <p style={{ color: 'red' }}>⚠️ {error}</p>;
-  if (products.length === 0) return <p>No products found.</p>;
-
-  console.log('products', products);
+  if (!products || products.length === 0) return <p>No products found.</p>;
 
   return (
-    <div style={{ margin: '3rem', backgroundColor: 'white' }}>
+    <div >
+      <div style={{ margin: '3rem', backgroundColor: 'white' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
           <tr style={{ backgroundColor: '#f5f5f5' }}>
@@ -31,13 +28,19 @@ const ProductList = ({ products, onDelete, loading, error }) => {
             </tr>
           ))}
         </tbody>
-      </table>
-
-      <div style={{ marginTop: '1rem' }}>
-        <p>
-          Page <strong><input defaultValue={products.page}></input></strong> of <strong>{products.pages}</strong>
-        </p>
-      </div>
+      </table>     
+    </div>
+     <div style={{ margin: '1rem', display: 'flex', gap: '1rem', backgroundColor: 'white', padding:'1rem', width:'30rem'}}>
+     <button onClick={() => onPageChange(page - 1)} disabled={page <= 1}>
+       ◀ Previous
+     </button>
+     <span>
+       Page <strong>{page}</strong> of <strong>{totalPages}</strong>
+     </span>
+     <button onClick={() => onPageChange(page + 1)} disabled={page >= totalPages}>
+       Next ▶
+     </button>
+   </div>
     </div>
   );
 };
