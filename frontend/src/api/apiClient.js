@@ -12,13 +12,34 @@ const apiClient = axios.create({
 });
 
 // Fetch all products with optional pagination
-export const fetchAllProducts = (page = 1, perPage = 10) =>
-  apiClient.get(`/?page=${page}&per_page=${perPage}`);
-
-// Fetch products by category
-export const fetchProductsByCategory = (category, page = 1, perPage = 10) =>
-  apiClient.get(`/category/${encodeURIComponent(category)}?page=${page}&per_page=${perPage}`);
-
-// Delete a product by ID
-export const deleteProduct = (id) =>
-  apiClient.delete(`/${id}`);
+export const fetchAllProducts = async (page = 1, perPage = 10) => {
+    try {
+      const response = await apiClient.get(`/?page=${page}&per_page=${perPage}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching all products:', error.message);
+      throw error;
+    }
+  };
+  
+  // Fetch products by category
+  export const fetchProductsByCategory = async (category, page = 1, perPage = 10) => {
+    try {
+      const response = await apiClient.get(`/category/${encodeURIComponent(category)}?page=${page}&per_page=${perPage}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching products for category "${category}":`, error.message);
+      throw error;
+    }
+  };
+  
+  // Delete a product by ID
+  export const deleteProduct = async (id) => {
+    try {
+      const response = await apiClient.delete(`/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error deleting product with ID ${id}:`, error.message);
+      throw error;
+    }
+  };
