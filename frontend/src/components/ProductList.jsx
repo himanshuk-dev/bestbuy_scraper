@@ -6,7 +6,6 @@ const ProductList = ({ products, onDelete, loading, error }) => {
   if (loading) return <p>Loading products...</p>;
   if (error) return <p style={{ color: 'red' }}>⚠️ {error}</p>;
   if (products.length === 0) return <p>No products found.</p>;
-
   return (
     <div style={{ display: 'grid', gap: '1rem' }}>
       {products.products.map((product) => (
@@ -25,6 +24,7 @@ const ProductList = ({ products, onDelete, loading, error }) => {
           <p><strong>Category:</strong> {product.category}</p>
         </div>
       ))}
+      <p>Page <input defaultValue={products.page}></input> of {products.pages}</p>
     </div>
   );
 };
