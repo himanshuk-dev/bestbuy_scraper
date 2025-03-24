@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { fetchAllCategories } from '../api/apiClient';
+import { Box, InputLabel, MenuItem, FormControl, Select } from '@mui/material';
 
 const Filter = ({ onChange }) => {
   const [categories, setCategories] = useState([]);
+  const [selected, setSelected] = useState('');
 
   useEffect(() => {
     const getCategories = async () => {
@@ -15,26 +17,35 @@ const Filter = ({ onChange }) => {
         console.error('Failed to fetch categories:', error.message);
       }
     };
-
     getCategories();
   }, []);
 
   const handleChange = (e) => {
-    onChange(e.target.value);
+    const value = e.target.value;
+    setSelected(value);
+    onChange(value);
   };
 
   return (
-    <div style={{ margin: '1rem 3rem', textAlign:'center', color:'wheat', fontSize:'2vh' }}>
-      <label htmlFor="category-select" style={{ marginRight: '1rem' }}>
-        Filter by Category:
-      </label>
-      <select id="category-select" onChange={handleChange} style={{padding:'1.3vh', textAlign:'center', fontSize:'1rem'}}>
-        <option value="">All</option>
-        {categories.map((cat) => (
-          <option key={cat} value={cat}>{cat}</option>
-        ))}
-      </select>
-    </div>
+    <Box display="flex" justifyContent="center" mt={3}>
+      <FormControl sx={{ minWidth: 300, backgroundColor: 'white' }}>
+        <InputLabel id="category-select-label" sx={{ fontWeight: 'bold' ,fontSize:'1.2rem'}}>Filter by Category</InputLabel>
+        <Select
+          labelId="category-select-label"
+          id="category-select"
+          value={selected}
+          label="Filter by Category"
+          onChange={handleChange}
+        >
+          <MenuItem value="">All</MenuItem>
+          {categories.map((cat) => (
+            <MenuItem key={cat} value={cat}>
+              {cat}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 };
 

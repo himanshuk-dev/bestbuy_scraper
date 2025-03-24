@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Filter from '../components/Filter';
 import ProductList from '../components/ProductList';
 import { fetchAllProducts, fetchProductsByCategory } from '../api/apiClient';
+import { Typography, Container } from '@mui/material';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -27,22 +28,26 @@ const Home = () => {
     };
 
     fetchData();
-  }, [selectedCategory, page]); // Include dependencies
+  }, [selectedCategory, page]);
 
   return (
-    <div>
-      <h1 style={{ textAlign:'center', color:'white', fontSize:'8vh' }}>BestBuy Database</h1>
+    <Container>
+      <Typography
+        variant="h3"
+        align="center"
+        sx={{ color: 'white', mt: 2, mb: 2 }}
+      >
+        BestBuy Database
+      </Typography>
+
       <Filter onChange={handleCategoryChange} />
       <ProductList
-  products={products}
-  // loading={loading}
-  // error={error}
-  page={page}
-  totalPages={products?.pages || 1}
-  onPageChange={(newPage) => setPage(newPage)}
-/>
-
-    </div>
+        products={products}
+        page={page}
+        totalPages={products?.pages || 1}
+        onPageChange={(newPage) => setPage(newPage)}
+      />
+    </Container>
   );
 };
 

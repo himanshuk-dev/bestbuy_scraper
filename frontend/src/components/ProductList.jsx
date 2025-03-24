@@ -1,65 +1,94 @@
 // Displays products in table
 
 import React from 'react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Box,
+  Stack
+} from '@mui/material';
 
 const ProductList = ({ products, loading, error, onPageChange, page, totalPages }) => {
-  if (loading) return <p>Loading products...</p>;
-  if (error) return <p style={{ color: 'red' }}>⚠️ {error}</p>;
-  if (!products || products.length === 0) return <p>No products found.</p>;
+  if (loading) return <Typography variant="body1">Loading products...</Typography>;
+  if (error) return <Typography color="error">⚠️ {error}</Typography>;
+  if (!products || products.length === 0) return <Typography>No products found.</Typography>;
 
   return (
-    <div>
-      <div style={{ margin: '3rem', backgroundColor: 'white' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f5f5f5' }}>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Price</th>
-              <th style={thStyle}>Rating</th>
-              <th style={thStyle}>Category</th>
-            </tr>
-          </thead>
-          <tbody>
+    <Box sx={{ justifyItems:'center'}}>
+      <TableContainer component={Paper} sx={{ margin: 4, maxWidth:'100%' }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell><strong>Name</strong></TableCell>
+              <TableCell><strong>Price</strong></TableCell>
+              <TableCell><strong>Rating</strong></TableCell>
+              <TableCell><strong>Category</strong></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {products.products.map((product) => (
-              <tr key={product.id}>
-                <td style={tdStyle}>{product.name}</td>
-                <td style={tdStyle}>{product.price}</td>
-                <td style={tdStyle}>{product.rating ?? 'N/A'}</td>
-                <td style={tdStyle}>{product.category}</td>
-              </tr>
+              <TableRow key={product.id}>
+                <TableCell sx={{ maxWidth:'40vh', padding:1.2}}>{product.name}</TableCell>
+                <TableCell sx={{ maxWidth:'10vh', padding:1.2}}>{product.price}</TableCell>
+                <TableCell sx={{ maxWidth:'10vh', padding:1.2}}>{product.rating ?? 'N/A'}</TableCell>
+                <TableCell sx={{ maxWidth:'1vh', padding:1.2}}>{product.category}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
 
-      <div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
-  <div style={{ display: 'flex', gap: '1rem', backgroundColor: 'white', padding: '1rem', borderRadius: '8px' }}>
-    <button onClick={() => onPageChange(1)} disabled={page === 1}>⏮ First</button>
-    <button onClick={() => onPageChange(page - 1)} disabled={page <= 1}>◀ Previous</button>
+      <Box display="flex" justifyContent="center" sx={{backgroundColor:'white', padding:'1rem', maxWidth: '90vh', borderRadius:2}}>
+  <Stack direction="row" spacing={2} alignItems="center">
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => onPageChange(1)}
+      disabled={page === 1}
+    >
+      ⏮ First
+    </Button>
 
-    <span>
+    <Button
+      variant="outlined"
+      onClick={() => onPageChange(page - 1)}
+      disabled={page <= 1}
+    >
+      ◀ Previous
+    </Button>
+
+    <Typography variant="body1">
       Page <strong>{page}</strong> of <strong>{totalPages}</strong>
-    </span>
+    </Typography>
 
-    <button onClick={() => onPageChange(page + 1)} disabled={page >= totalPages}>Next ▶</button>
-    <button onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>Last ⏭</button>
-  </div>
-</div>
+    <Button
+      variant="outlined"
+      onClick={() => onPageChange(page + 1)}
+      disabled={page >= totalPages}
+    >
+      Next ▶
+    </Button>
 
-    </div>
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={() => onPageChange(totalPages)}
+      disabled={page === totalPages}
+    >
+      Last ⏭
+    </Button>
+  </Stack>
+</Box>
+
+    </Box>
   );
-};
-
-const thStyle = {
-  padding: '10px',
-  border: '1px solid #ddd',
-  textAlign: 'left',
-};
-
-const tdStyle = {
-  padding: '10px',
-  border: '1px solid #eee',
-  maxWidth:'40rem'
 };
 
 export default ProductList;
