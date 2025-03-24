@@ -1,6 +1,6 @@
 # API route definitions
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from db import db
 from models import Product, Category
 
@@ -50,10 +50,12 @@ def get_products_by_category(category_name):
 # DELETE /data/<int:id> -> Delete product by ID
 @api_bp.route('/<int:id>', methods=['DELETE'])
 def delete_product(id):
-    product = Product.query.get(id)
-    if not product:
-        return jsonify({"error": "Product not found"}), 404
+    with current_app.app_context():
+        session = db.session
+        product = session.get(Product, id)
+        if not product:
+            return jsonify({"error": "Product not found"}), 404
 
-    db.session.delete(product)
-    db.session.commit()
-    return jsonify({"message": f"Product {id} deleted successfully."})
+        session.delete(product)
+        session.commit()
+        return jsonify({"message": f"Product {id} deleted successfully."})
