@@ -2,19 +2,18 @@
 
 A full-stack web application that scrapes product listings from BestBuy, stores them in a PostgreSQL database, and provides a React-based UI to browse and filter those products.
 
-##### BesyBuy Scraper preview:
+##### BestBuy Scraper preview:
 ![bestbuy_scraper](https://github.com/user-attachments/assets/274f665e-5735-40a9-bfcc-7cdcb5db4043)
 
-##### BesyBuy Scraper Frontend preview:
+##### BestBuy Scraper Frontend preview:
 <img width="1709" alt="bestbuy_scraper_frontend" src="https://github.com/user-attachments/assets/c2cfa250-5628-44ee-90c8-e8c82399d6cf" />
-
 
 ---
 
 ## Features
 
 ### Backend (Flask + PostgreSQL)
-- Scrapes product data from BestBuy categories using BeautifulSoup
+- Scrapes product data from BestBuy categories using Selenium
 - Stores product and category data in a PostgreSQL database
 - REST API endpoints:
   - `GET /data`: Paginated list of products
@@ -24,7 +23,6 @@ A full-stack web application that scrapes product listings from BestBuy, stores 
 
 ### Database Schema
 ![bestbuy_scraper_schema](https://github.com/user-attachments/assets/682f6ba1-fc03-4470-99e6-2f0e67b932cc)
-
 
 ### Frontend (React + Material UI)
 - Category filter dropdown
@@ -54,41 +52,82 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-#### Configure .env
-- Create a .env file in backend/:
-```
+### Configure .env
+- Create a `.env` file in `backend/`:
+```env
+DB_NAME=bestbuy_db
+DB_USER=your_user
+DB_PASSWORD=your_password
+DB_HOST=localhost
+DB_PORT=5432
+
 DATABASE_URL=postgresql://username:password@localhost:5432/bestbuy_db
 ```
-<i>NOTE: Please copy .env.example, rename the file and update database variables/ url with your credentials.</i>
+*NOTE: Please copy `.env.example`, rename the file and update database credentials accordingly.*
 
-#### Run Flask App
+---
+
+## Running the Scraper
+
+The scraper extracts product and category data from BestBuy.ca and stores it in your configured PostgreSQL database.
+
+### 1. Ensure your database is configured in `.env`
+Make sure your `.env` file inside the `backend/` directory is correctly set up with valid credentials.
+
+### 2. Run the Scraper Script
+
+From the root of the backend folder:
+
+```
+cd backend
+source venv/bin/activate
+python scraper.py
+```
+
+This will:
+- Create the database (if it doesn’t exist)
+- Create the necessary tables
+- Scrape categories and product data from BestBuy.ca
+- Insert the data into the database
+
+The scraper uses `Selenium` and `webdriver-manager` to automate Chrome in headless mode.
+
+---
+
+### Run Flask App
 ```
 cd backend/api
 flask run
 ```
+---
 
 ## Frontend Setup
+
 ```
 cd frontend
 npm install
 npm start
 ```
-<i>NOTE: The app runs on http://localhost:3000 and connects to backend at http://localhost:5000.</i>
+*NOTE: The app runs on http://localhost:3000 and connects to backend at http://localhost:5000.*
+
+---
 
 ## Running Tests
 
-#### Backend Tests (Pytest)
+### Backend Tests (Pytest)
 ```
 cd backend
 pytest
 ```
-<i>NOTE: Tests use a test database defined in .env.test and are cleaned up after each run. Please copy .env.test.example, rename the file and update database url with your credentials.</i>
+*NOTE: Tests use a test database defined in `.env.test` and are cleaned up after each run. Please copy `.env.test.example`, rename the file and update database url with your credentials.*
 
-#### Frontend Tests (Jest + React Testing Library)
+### Frontend Tests (Jest + React Testing Library)
 ```
 cd frontend
 npm test
 ```
+
+---
 
 ## Project Structure
 ```
@@ -115,7 +154,7 @@ bestbuy_scraper/
 ## Built With
 - Backend: Flask, SQLAlchemy, PostgreSQL, Pytest
 - Frontend: React, Material UI, Axios, React Testing Library
-- Web Scraping: BeautifulSoup, Requests
+- Web Scraping: Selenium, WebDriverManager
 
 ## Included Documents
 - [Design Decisions.md](design-decisions.md) : Explains design choices and the time spent on each section.
