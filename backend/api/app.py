@@ -4,6 +4,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 from routes import api_bp
 from db import db
@@ -13,6 +14,9 @@ load_dotenv()
 
 def create_app(test_config=None):
     app = Flask(__name__)
+
+    # Enable CORS
+    CORS(app) 
 
     # Use testing config if provided
     if test_config:

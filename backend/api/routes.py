@@ -25,6 +25,12 @@ def get_all_products():
         "pages": paginated.pages
     })
 
+# GET /data/categories -> Return list of category names
+@api_bp.route('/categories', methods=['GET'])
+def get_all_categories():
+    categories = Category.query.all()
+    return jsonify([cat.name for cat in categories])
+
 
 # GET /data/category/<category_name> -> Filter by category
 @api_bp.route('/category/<string:category_name>', methods=['GET'])
