@@ -20,7 +20,7 @@ const Home = () => {
         const response = selectedCategory
           ? await fetchProductsByCategory(selectedCategory, page)
           : await fetchAllProducts(page);
-        setProducts(response.data.products);
+        setProducts(response);
       } catch (err) {
         console.error('Error fetching data:', err);
       }
