@@ -50,7 +50,7 @@ const Home = () => {
       ) : (
         <ProductList
           products={products}
-          error={error}
+          error={error.message}
           page={page}
           totalPages={products?.pages || 1}
           onPageChange={(newPage) => setPage(newPage)}

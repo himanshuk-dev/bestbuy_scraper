@@ -16,8 +16,8 @@ import {
 } from '@mui/material';
 
 const ProductList = ({ products, error, onPageChange, page, totalPages }) => {
-  if (error) return <Typography color="error">⚠️ {error}</Typography>;
-  if (!products || products.length === 0) return <Typography>No products found.</Typography>;
+  if (error) return <Typography color="error" sx={{textAlign:'center', marginTop:10, fontSize: '2rem'}}>⚠️ {error}</Typography>;
+  if (!products || products.products.length === 0) return <Typography sx={{textAlign:'center', marginTop:10, fontSize: '2rem', color: 'red'}}>No products found!</Typography>;
 
   return (
     <Box sx={{ justifyItems:'center'}}>
@@ -36,7 +36,7 @@ const ProductList = ({ products, error, onPageChange, page, totalPages }) => {
               <TableRow key={product.id}>
                 <TableCell sx={{ maxWidth:'40vh', padding:1.2}}>{product.name}</TableCell>
                 <TableCell sx={{ maxWidth:'10vh', padding:1.2}}>{product.price}</TableCell>
-                <TableCell sx={{ maxWidth:'10vh', padding:1.2}}>{product.rating ?? 'N/A'}</TableCell>
+                <TableCell sx={{ maxWidth:'10vh', padding:1.2}}>{product.rating ?? '0'}</TableCell>
                 <TableCell sx={{ maxWidth:'1vh', padding:1.2}}>{product.category}</TableCell>
               </TableRow>
             ))}
