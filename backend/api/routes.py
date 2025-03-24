@@ -1,8 +1,8 @@
 # API route definitions
 
 from flask import Blueprint, jsonify, request
-from backend.api import db
-from backend.api.models import Product, Category
+from db import db
+from models import Product, Category
 
 api_bp = Blueprint('api', __name__, url_prefix='/data')
 

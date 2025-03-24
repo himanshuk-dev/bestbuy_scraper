@@ -1,7 +1,8 @@
 import pytest
 from flask import url_for
-from backend.api import create_app, db
-from backend.api.models import Product, Category
+from app import create_app
+from db import db
+from models import Product, Category
 
 @pytest.fixture
 def client():

@@ -1,6 +1,6 @@
 # SQLAlchemy data models (Product, Category)
 
-from . import db
+from db import db
 
 class Category(db.Model):
     __tablename__ = 'categories'

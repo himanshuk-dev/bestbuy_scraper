@@ -1,8 +1,9 @@
 # backend/api/conftest.py
 import os
 import pytest
-from backend.api import create_app, db
-from backend.api.models import Category, Product
+from app import create_app
+from db import db
+from models import Category, Product
 from dotenv import load_dotenv
 
 load_dotenv(".env.test")  # Load test environment variables
