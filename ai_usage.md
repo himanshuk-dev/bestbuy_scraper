@@ -1,5 +1,5 @@
 
-# AI Usage & Decision-Making Documentation
+# AI Usage Documentation
 
 ## Overview
 While developing this project, I used AI tools like ChatGPT primarily as a debugging assistant and to accelerate minor development tasks. I intentionally avoided using AI for core logic or full code generation, ensuring that the project reflects my skills and problem-solving abilities.
