@@ -15,8 +15,7 @@ import {
   Stack
 } from '@mui/material';
 
-const ProductList = ({ products, loading, error, onPageChange, page, totalPages }) => {
-  if (loading) return <Typography variant="body1">Loading products...</Typography>;
+const ProductList = ({ products, error, onPageChange, page, totalPages }) => {
   if (error) return <Typography color="error">⚠️ {error}</Typography>;
   if (!products || products.length === 0) return <Typography>No products found.</Typography>;
 
