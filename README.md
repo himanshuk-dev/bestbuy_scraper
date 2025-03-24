@@ -2,6 +2,13 @@
 
 A full-stack web application that scrapes product listings from BestBuy, stores them in a PostgreSQL database, and provides a React-based UI to browse and filter those products.
 
+##### BesyBuy Scraper preview:
+![bestbuy_scraper](https://github.com/user-attachments/assets/274f665e-5735-40a9-bfcc-7cdcb5db4043)
+
+##### BesyBuy Scraper Frontend preview:
+<img width="1709" alt="bestbuy_scraper_frontend" src="https://github.com/user-attachments/assets/c2cfa250-5628-44ee-90c8-e8c82399d6cf" />
+
+
 ---
 
 ## Features
@@ -16,7 +23,7 @@ A full-stack web application that scrapes product listings from BestBuy, stores 
 - Test coverage using Pytest
 
 ### Database Schema
-![Database Schema](./backend/assets/bestbuy_scraper_schema.png)
+![bestbuy_scraper_schema](https://github.com/user-attachments/assets/682f6ba1-fc03-4470-99e6-2f0e67b932cc)
 
 
 ### Frontend (React + Material UI)
