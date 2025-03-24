@@ -109,3 +109,7 @@ bestbuy_scraper/
 - Backend: Flask, SQLAlchemy, PostgreSQL, Pytest
 - Frontend: React, Material UI, Axios, React Testing Library
 - Web Scraping: BeautifulSoup, Requests
+
+## Included Documents
+- [Design Decisions.md](design-decisions.md) : Explains design choices and the time spent on each section.
+- [Ai usage.md](ai_usage.md) : Includes AI tools used for development and list of prompts.
