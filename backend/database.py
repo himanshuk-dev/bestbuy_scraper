@@ -1,11 +1,12 @@
+# Utility for PostgreSQL connection, schema initialization, and data insertion
 import os
 import psycopg2
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables from a .env file for DB credentials
 load_dotenv()
 
-# Database connection settings
+# Database connection configuration loaded from environment variables
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -13,10 +14,15 @@ DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 
 def create_database_if_not_exists():
-    """Creates the database if it doesn't exist. Returns True if created."""
+    """
+    Checks if the specified database exists.
+    If not, creates the database using default 'postgres' DB.
+    Returns True if a new DB is created, False otherwise.
+    """
     try:
+        # Connect to default 'postgres' DB to perform administrative tasks
         conn = psycopg2.connect(
-            dbname="postgres",  # connect to default DB
+            dbname="postgres",
             user=DB_USER,
             password=DB_PASSWORD,
             host=DB_HOST,
@@ -25,46 +31,53 @@ def create_database_if_not_exists():
         conn.autocommit = True
         cur = conn.cursor()
 
+        # Check if the target database already exists
         cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (DB_NAME,))
         exists = cur.fetchone()
 
         if not exists:
+            # Create new database if not present
             cur.execute(f"CREATE DATABASE {DB_NAME}")
             print(f"✅ Database '{DB_NAME}' created successfully.")
-            cur.close()
-            conn.close()
-            return True
         else:
             print(f"ℹ️ Database '{DB_NAME}' already exists.")
-            cur.close()
-            conn.close()
-            return False
+
+        cur.close()
+        conn.close()
+        return not exists
 
     except Exception as e:
         print(f"❌ Error checking or creating database: {e}")
         return False
 
 class DatabaseManager:
+    """
+    Handles PostgreSQL operations like initializing schema,
+    inserting categories/products, and managing connections.
+    """
+
     def __init__(self):
         self.conn = self.get_connection()
 
     def get_connection(self):
-        """Establishes and returns a PostgreSQL database connection."""
+        """Establishes a PostgreSQL database connection using environment variables."""
         try:
-            conn = psycopg2.connect(
+            return psycopg2.connect(
                 dbname=DB_NAME,
                 user=DB_USER,
                 password=DB_PASSWORD,
                 host=DB_HOST,
                 port=DB_PORT
             )
-            return conn
         except Exception as e:
             print(f"Error connecting to the database: {e}")
             return None
 
     def initialize_db(self):
-        """Initializes the database schema from data.sql."""
+        """
+        Initializes database schema by running SQL commands
+        from the 'data.sql' file.
+        """
         if self.conn:
             try:
                 with self.conn.cursor() as cur:
@@ -76,7 +89,11 @@ class DatabaseManager:
                 print(f"Error initializing database: {e}")
 
     def insert_category(self, name, url):
-        """Inserts a category into the database, avoiding duplicates."""
+        """
+        Inserts a new category into the 'categories' table.
+        If it already exists (conflict on name), retrieves its ID.
+        Returns the category ID.
+        """
         if self.conn:
             try:
                 with self.conn.cursor() as cur:
@@ -90,12 +107,16 @@ class DatabaseManager:
                     )
                     category_id = cur.fetchone()
                     self.conn.commit()
+                    # Return the new or existing category ID
                     return category_id[0] if category_id else self.get_category_id_by_name(name)
             except Exception as e:
                 print(f"Error inserting category: {e}")
 
     def get_category_id_by_name(self, name):
-        """Fetches the category ID by its name."""
+        """
+        Retrieves the ID of a category by its name.
+        Returns None if not found.
+        """
         if self.conn:
             try:
                 with self.conn.cursor() as cur:
@@ -107,7 +128,10 @@ class DatabaseManager:
                 return None
 
     def insert_product(self, name, price, rating, category_id):
-        """Inserts a product into the database, avoiding duplicates."""
+        """
+        Inserts a product into the 'products' table.
+        Prevents duplicate entries by checking on (name, category_id).
+        """
         if self.conn:
             try:
                 with self.conn.cursor() as cur:
@@ -123,10 +147,11 @@ class DatabaseManager:
                 print(f"Error inserting product: {e}")
 
     def close_connection(self):
-        """Closes the database connection."""
+        """Safely closes the PostgreSQL connection."""
         if self.conn:
             self.conn.close()
 
+# Run this file directly to initialize the database
 if __name__ == "__main__":
     if create_database_if_not_exists():
         db_manager = DatabaseManager()
