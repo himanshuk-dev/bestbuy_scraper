@@ -1,0 +1,1 @@
+// Displays products in a table.
