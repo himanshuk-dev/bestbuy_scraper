@@ -11,7 +11,7 @@ class Category(db.Model):
 
     products = db.relationship('Product', backref='category', cascade='all, delete', lazy=True)
 
-    def to_dict(self):
+    def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -27,7 +27,7 @@ class Product(db.Model):
     rating = db.Column(db.Float)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id', ondelete='CASCADE'))
 
-    def to_dict(self):
+    def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
