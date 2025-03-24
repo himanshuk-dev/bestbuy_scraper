@@ -1,6 +1,6 @@
 // Home.jsx
 import React, { useEffect, useState } from 'react';
-// import Filter from '../components/Filter';
+import Filter from '../components/Filter';
 import ProductList from '../components/ProductList';
 import { fetchAllProducts, fetchProductsByCategory } from '../api/apiClient';
 
@@ -32,7 +32,7 @@ const Home = () => {
   return (
     <div>
       <h1 style={{ textAlign:'center', color:'white', fontSize:'8vh' }}>BestBuy Database</h1>
-      {/* <Filter onChange={handleCategoryChange} /> */}
+      <Filter onChange={handleCategoryChange} />
       <ProductList
   products={products}
   // loading={loading}

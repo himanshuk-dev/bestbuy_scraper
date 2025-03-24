@@ -21,6 +21,19 @@ export const fetchAllProducts = async (page = 1, perPage = 10) => {
       throw error;
     }
   };
+
+
+  // Fetch all categories
+export const fetchAllCategories = async () => {
+    try {
+      const response = await apiClient.get('/categories');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching categories:', error.message);
+      throw error;
+    }
+  };
+  
   
   // Fetch products by category
   export const fetchProductsByCategory = async (category, page = 1, perPage = 10) => {
