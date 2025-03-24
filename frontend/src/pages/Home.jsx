@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Filter from '../components/Filter';
 import ProductList from '../components/ProductList';
-import { fetchAllProducts, fetchByCategory } from '../api/apiClient';
+import { fetchAllProducts, fetchProductsByCategory } from '../api/apiClient';
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -17,7 +17,7 @@ const Home = () => {
   const fetchData = async () => {
     try {
       const response = selectedCategory
-        ? await fetchByCategory(selectedCategory, page)
+        ? await fetchProductsByCategory(selectedCategory, page)
         : await fetchAllProducts(page);
       setProducts(response.data.products);
     } catch (err) {
