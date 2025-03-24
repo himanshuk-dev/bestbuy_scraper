@@ -12,10 +12,10 @@ load_dotenv()
 
 db = SQLAlchemy()
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
 
-    # Set config from environment variables
+    # Use testing config if provided
     if test_config:
         app.config.update(test_config)
     else:
